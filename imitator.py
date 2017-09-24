@@ -11,6 +11,9 @@ from urllib import request
 import config
 prefix = '!'
 
+# this specifies what extensions to load when the bot starts up
+startup_extensions = ["silly"]
+
 bot = commands.Bot(command_prefix=prefix, description='Test Bot, Please Ignore')
 
 
@@ -26,17 +29,6 @@ async def hello(ctx):
     """Bot says hello!"""
     author = ctx.message.author.id
     await bot.say("Hello <@!{0}>!".format(author))
-
-
-@bot.command()
-async def count(count : int):
-    """Tries to count to whatever number you write."""
-    if count < 21:    
-        for x in range(1,count+1):
-            await bot.say(x)
-            asyncio.sleep(0.5)
-    else:
-        await bot.say("I can't count to " + str(count) + ".")
 
 
 @bot.command()
@@ -122,4 +114,12 @@ async def bash():
         await bot.say(msg)        
 
 
-bot.run(config.token)
+if __name__ == "__main__":
+    for extension in startup_extensions:
+        try:
+            bot.load_extension(extension)
+        except Exception as e:
+            exc = '{}: {}'.format(type(e).__name__, e)
+            print('Failed to load extension {}\n{}'.format(extension, exc))
+
+    bot.run(config.token)
