@@ -8,6 +8,7 @@ import time
 import random
 from urllib import request
 
+import config
 prefix = 'test!'
 
 bot = commands.Bot(command_prefix=prefix, description='Test Bot, Please Ignore')
@@ -120,4 +121,4 @@ async def bash():
         await bot.say(msg)        
 
 
-bot.run('MzYwNzY0NjUyMDEyOTYxODAz.DKgGog.vR_eLKlHw_wRsuU2ECM7fozK2CA')
+bot.run(config.token)
