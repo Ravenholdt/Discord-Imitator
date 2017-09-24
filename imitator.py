@@ -21,10 +21,11 @@ async def on_ready():
     print('------')
     
 
-@bot.command()
-async def hello():
+@bot.command(pass_context=True)
+async def hello(ctx):
     """Bot says hello!"""
-    await bot.say("Hello!")
+    author = ctx.message.author
+    await bot.say("Hello {.nick}!".format(author))
 
 
 @bot.command()
