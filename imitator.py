@@ -19,13 +19,13 @@ async def on_ready():
     print('Logged in as')
     print(bot.user.name)
     print('------')
-    
+
 
 @bot.command(pass_context=True)
 async def hello(ctx):
     """Bot says hello!"""
-    author = ctx.message.author
-    await bot.say("Hello {.nick}!".format(author))
+    author = ctx.message.author.id
+    await bot.say("Hello <@!{0}>!".format(author))
 
 
 @bot.command()
