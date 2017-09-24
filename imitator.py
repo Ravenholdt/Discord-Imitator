@@ -9,7 +9,7 @@ import random
 from urllib import request
 
 import config
-prefix = 'test!'
+prefix = '!'
 
 bot = commands.Bot(command_prefix=prefix, description='Test Bot, Please Ignore')
 
@@ -92,7 +92,7 @@ async def cool(ctx):
     if ctx.invoked_subcommand is None:
         await bot.say('No, {0.subcommand_passed} is not cool'.format(ctx))
 
-@cool.command(name='@Imitator#2588')
+@cool.command(name='bot')
 async def _bot():
     """Is the bot cool?"""
     await bot.say('Yes, I am cool.')
