@@ -15,7 +15,9 @@ class Wolfram:
     async def wolfram(self, *, query : str):
         """Ask Wolfram Alpha."""
         res = client.query(query)
-        self.bot.say(res)
+        #res = 'Please ignore this function.'
+        answer = next(res.results).text
+        await self.bot.say("From Wolfram Alpha:\n" + answer)
 
 
 def setup(bot):
