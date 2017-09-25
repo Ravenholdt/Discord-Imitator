@@ -7,7 +7,7 @@ import config
 
 client = wolframalpha.Client(config.wolframappid)
 
-class Wolfram:
+class Info:
     def __init__(self, bot):
         self.bot = bot
 
@@ -21,4 +21,4 @@ class Wolfram:
 
 
 def setup(bot):
-    bot.add_cog(Wolfram(bot))
+    bot.add_cog(Info(bot))
