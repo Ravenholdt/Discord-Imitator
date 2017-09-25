@@ -7,14 +7,14 @@ class Silly:
         self.bot = bot
 
     @commands.command()
-    async def count(count : int):
+    async def count(self, count : int):
         """Tries to count to whatever number you write."""
         if count < 21:    
             for x in range(1,count+1):
-                await bot.say(x)
+                await self.bot.say(x)
                 asyncio.sleep(0.5)
         else:
-            await bot.say("I can't count to " + str(count) + ".")
+            await self.bot.say("I can't count to " + str(count) + ".")
 
 
 def setup(bot):

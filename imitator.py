@@ -12,7 +12,7 @@ import config
 prefix = '!'
 
 # this specifies what extensions to load when the bot starts up
-startup_extensions = ["silly"]
+startup_extensions = ["silly","maths"]
 
 bot = commands.Bot(command_prefix=prefix, description='Test Bot, Please Ignore')
 
@@ -39,6 +39,18 @@ async def unload(extension_name : str):
     """Unloads an extension."""
     bot.unload_extension(extension_name)
     await bot.say("{} unloaded.".format(extension_name))
+
+
+@bot.command()
+async def reload(extension_name : str):
+    """Reloads an extension."""
+    bot.unload_extension(extension_name)
+    try:
+        bot.load_extension(extension_name)
+    except (AttributeError, ImportError) as e:
+        await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
+        return
+    await bot.say("{} reloaded.".format(extension_name))
 
 
 @bot.command(pass_context=True)
