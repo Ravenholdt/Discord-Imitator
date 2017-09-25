@@ -12,7 +12,7 @@ import config
 prefix = '!'
 
 # this specifies what extensions to load when the bot starts up
-startup_extensions = ["silly","maths"]
+startup_extensions = ["silly","maths","wolfram"]
 
 bot = commands.Bot(command_prefix=prefix, description='Test Bot, Please Ignore')
 
@@ -132,11 +132,9 @@ async def bash():
             line = bashorg.readline()
             if line == '%\n':
                 x += 1
-                # print (x) # Debug
             elif x == quote:
                 msg = msg + line
             abort -= 1
-            # print (abort) # Debug
             if abort < 0:
                 await bot.say("Fuck this! I'm out!")
                 return
@@ -151,4 +149,4 @@ if __name__ == "__main__":
             exc = '{}: {}'.format(type(e).__name__, e)
             print('Failed to load extension {}\n{}'.format(extension, exc))
 
-    bot.run(config.token)
+    bot.run(config.discordtoken)

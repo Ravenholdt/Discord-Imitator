@@ -28,7 +28,10 @@ class Maths:
     @math.command()
     async def divide(self, first : float, second : float):
         """Divide the first number with the second"""
-        await self.bot.say(first / second)
+        try:
+            await self.bot.say(first / second)
+        except:
+            await self.bot.say("Please don't force me perform that operation.")
 
 def setup(bot):
     bot.add_cog(Maths(bot))
