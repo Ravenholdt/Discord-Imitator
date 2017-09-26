@@ -12,12 +12,13 @@ class Silly:
     @commands.command()
     async def count(self, count : int):
         """Tries to count to whatever number you write."""
-        if count < 21:    
+        maxcount = 21
+        if count < maxcount:    
             for x in range(1,count+1):
                 await self.bot.say(x)
                 asyncio.sleep(0.5)
         else:
-            await self.bot.say("I can't count to " + str(count) + ".")
+            await self.bot.say("Yeah? Well, YOU count to " + str(count) + "!")
 
 
     @commands.command()
