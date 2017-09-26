@@ -53,13 +53,6 @@ async def reload(extension_name : str):
     await bot.say("{} reloaded.".format(extension_name))
 
 
-#@bot.command(pass_context=True)
-#async def hello(ctx):
-#    """Bot says hello!"""
-#    author = ctx.message.author.id
-#    await bot.say("Hello <@!{0}>!".format(author))
-
-
 #@bot.command()
 #async def roll(dice : str):
 #    """Rolls dice in NdN format."""
