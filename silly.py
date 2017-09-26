@@ -61,5 +61,18 @@ class Silly:
                     return
             await self.bot.say(msg)
 
+
+    @commands.command()
+    async def internationale(self):
+        with open("data/internationale.txt", "r") as lyrics:
+            for line in lyrics:
+                try:
+                    await self.bot.say(line)
+                except:
+                    pass
+                asyncio.sleep(5)
+
+    
+
 def setup(bot):
     bot.add_cog(Silly(bot))
