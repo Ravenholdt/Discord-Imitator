@@ -35,7 +35,7 @@ class Misc:
     @commands.command()
     async def request(self, *, req : str):
         """Make a (feature) request."""
-        with open("request.txt", "a") as requestFile:
+        with open("data/request.txt", "a") as requestFile:
             requestFile.write(req + "\n")
             await self.bot.say("Request received.")
 
@@ -44,7 +44,7 @@ class Misc:
     # Request (List)
     async def requestList(self):
         """List all current requests."""
-        with open("request.txt", "r") as requestFile:
+        with open("data/request.txt", "r") as requestFile:
             info = "Listing all requests.\n"
             content = requestFile.read()
             await self.bot.say(info + content)

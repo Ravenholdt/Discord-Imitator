@@ -47,8 +47,8 @@ class Silly:
         quote = random.randint(0,8000)
         x = 0
         abort = 40000
-        msg = 'Quote from Bash.org.\n'
-        with open("bashorg", "r") as bashorg:
+        msg = '**Quote from Bash.org.**\n'
+        with open("data/bashorg", "r") as bashorg:
             while x <= quote:
                 line = bashorg.readline()
                 if line == '%\n':
