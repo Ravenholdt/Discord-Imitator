@@ -56,10 +56,15 @@ class Democracy:
                 self.lastMotionMsg = await self.bot.say(embed=embed)
 
             # Checks for approval.
-            if len(self.yes >= approvalNeeded):
+            if len(self.yes >= self.approvalNeeded):
                 # Vote passes
                 await self.bot.say("**Motion:**\n" + self.mot + "\n **Passed.**")
                 await self.resetMotion(True)
+
+            if len(self.no >= self.approvalNeeded):
+                # Vote failed
+                await self.bot.say("**Motion:**\n" + self.mot + "\n **Failed.**")
+                await self.resetMotion(False)
                 
 
     async def resetMotion(self, passed = False):
