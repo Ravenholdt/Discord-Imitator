@@ -35,11 +35,18 @@ class Info:
     @commands.command()
     async def urban(self, *, query : str):
         """Search the Urban Dictionary."""
-        msg = "**From Urban Dictionary:**\n"
         defs = ud.define(query)
-        for d in defs:
-            msg = msg + "**" + defs[0].word + ":** " + d.definition + "\n"
-        await self.bot.say(msg)
+
+        word = defs[0].word
+        definition = defs[0].definition
+        example = defs[0].example
+        votes = str(defs[0].upvotes) + " | " + str(defs[0].downvotes)
+
+        emb = discord.Embed(title=word)
+        emb.add_field(name="Definition", value=definition, inline=False)
+        emb.add_field(name="Example", value=str(example + "\n\n" + votes), inline=False)
+
+        await self.bot.say(embed = emb)
 
 
 def setup(bot):
