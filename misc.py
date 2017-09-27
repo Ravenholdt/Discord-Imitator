@@ -49,5 +49,13 @@ class Misc:
             content = requestFile.read()
             await self.bot.say(info + content)
 
+
+    @commands.command()
+    async def source(self):
+        """Links to the bot's github."""
+        link = "https://github.com/Ravenholdt/Discord-Imitator"
+        await self.bot.say(link)
+        
+
 def setup(bot):
     bot.add_cog(Misc(bot))
