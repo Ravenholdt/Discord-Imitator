@@ -91,7 +91,7 @@ class Democracy:
                 file.write(str(lawNR))
 
             with open("var/motions.txt", "a") as file:
-                msg = "$" + str(lawNR) + ": " + self.mot + "\n - Votes: "
+                msg = "**$" + str(lawNR) + ":** " + self.mot + "\n - Votes: "
                 msg += "For: "
                 for voter in self.yes:
                     msg += "<@" + voter + ">, "
@@ -182,8 +182,18 @@ class Democracy:
             await self.bot.add_reaction(ctx.message, "\U00002611")
 
         await self.motionHandler(edit = True)
-        
 
+
+    @commands.command()
+    async def resolutions(self):
+        """View the resolutions."""
+        with open("var/motions.txt", "r") as file:
+            data = file.read()
+            if data == "":
+                await self.bot.say("There are no resolutions yet.")
+            else:
+                await self.bot.say(data)
+            
 
 def setup(bot):
     bot.add_cog(Democracy(bot))
