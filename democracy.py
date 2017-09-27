@@ -54,7 +54,7 @@ class Democracy:
                 # Vote passes
                 #await self.bot.say("**Motion:**\n" + self.mot + "\n **Passed.**")
                 self.motPassed = True
-                await self.motionEmbed(edit = True) # Edit all previous embeds
+                await self.motionEmbed(edit = True, ended = True) # Edit all previous embeds
                 await self.motionEmbed(edit = False, ended = True) # Create an ending embed.
                 await self.resetMotion(passed = True) # Reset the voting.
 
@@ -62,7 +62,7 @@ class Democracy:
             if len(self.no) >= self.approvalNeeded:
                 # Vote failed
                 #await self.bot.say("**Motion:**\n" + self.mot + "\n **Failed.**")
-                await self.motionEmbed(edit = True) # Edit all previous Embeds
+                await self.motionEmbed(edit = True, ended = True) # Edit all previous Embeds
                 await self.motionEmbed(edit = False, ended = True) # Create an ending embed.
                 await self.resetMotion(passed = False) # Reset the voting.
 
