@@ -70,7 +70,7 @@ class Silly:
                     await self.bot.say(line)
                 except:
                     pass
-                asyncio.sleep(5)
+                await asyncio.sleep(4)
 
     
 
