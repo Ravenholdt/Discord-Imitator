@@ -22,6 +22,7 @@ class Democracy:
 
     @commands.group(pass_context=True)
     async def motion(self, ctx):
+        """View current motion or create a new one."""
         if ctx.invoked_subcommand is None:
             await self.motionEmbed()
             
