@@ -24,7 +24,7 @@ class Democracy:
     async def motion(self, ctx):
         """View current motion or create a new one."""
         if ctx.invoked_subcommand is None:
-            await self.motionEmbed()
+            await self.motionHandler()
             
 
     @motion.command()
@@ -35,7 +35,7 @@ class Democracy:
             self.date = datetime.datetime.now()
             
         # Inform users that new motion started.
-        await self.motionEmbed()
+        await self.motionHandler()
         
 
 
@@ -44,7 +44,7 @@ class Democracy:
         if self.date == 0:
             await self.bot.say("No motion in progress.")
         else:
-            self.motionEmbed(edit = edit)
+            await self.motionEmbed(edit = edit)
 
             # Checks for approval.
             if len(self.yes) >= self.approvalNeeded:
@@ -70,9 +70,10 @@ class Democracy:
 
         if edit: # Update already existing embed
             for motionMsg in self.lastMotionMsg:
-                    await self.bot.edit_message(self.lastMotionMsg, embed=embed)
+                    await self.bot.edit_message(motionMsg, embed=embed)
         else: # Create a new embed
-            self.lastMotionMsg.append = await self.bot.say(embed=embed)
+            motMsg = await self.bot.say(embed=embed)
+            self.lastMotionMsg.append(motMsg)
                 
 
     async def resetMotion(self, passed = False):
@@ -138,7 +139,7 @@ class Democracy:
             self.yes.append(voter)
             await self.bot.add_reaction(ctx.message, "\U00002705")
 
-        await self.motionEmbed(True)
+        await self.motionHandler(edit = True)
 
     @vote.command(pass_context=True)
     async def nay(self, ctx):
@@ -156,7 +157,7 @@ class Democracy:
             self.no.append(voter)
             await self.bot.add_reaction(ctx.message, "\U0000274E")
 
-        await self.motionEmbed(True)
+        await self.motionHandler(edit = True)
 
     @vote.command(pass_context=True)
     async def abstain(self, ctx):
@@ -174,7 +175,7 @@ class Democracy:
             self.abs.append(voter)
             await self.bot.add_reaction(ctx.message, "\U00002611")
 
-        await self.motionEmbed(True)
+        await self.motionHandler(edit = True)
         
 
 
