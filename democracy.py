@@ -8,6 +8,7 @@ class Democracy:
     
     mot = "None." # Keeps track of the current Motion.
     date = 0 # Keeps track of when the current motion started.
+    proposalBy = 0
 
     motPassed = False # Flag for wether the motion has failed or not.
 
@@ -30,12 +31,13 @@ class Democracy:
             await self.motionHandler()
             
 
-    @motion.command()
-    async def new(self, *, motion : str):
+    @motion.command(pass_context=True)
+    async def new(self, ctx, *, motion : str):
         """Create a new motion."""
         if self.date == 0:
             self.mot = motion
             self.date = datetime.datetime.now()
+            self.proposalBy = ctx.message.author.id
             
         # Inform users that new motion started.
         await self.motionHandler()
@@ -84,7 +86,7 @@ class Democracy:
         embed.add_field(name="------------------", value=self.mot, inline=False)
         value = "\U00002705 " + str(len(self.yes)) + "  |  \U0000274E " + str(len(self.no)) + "  |  \U00002611 " + str(len(self.abs))
         embed.add_field(name="Votes", value=value, inline=True)
-        embed.set_footer(text=str(self.date))
+        embed.set_footer(text= "Proposal by: <@" + self.proposalBy + ">  " + str(self.date))
 
         if edit: # Update already existing embed
             for motionMsg in self.lastMotionMsg:
@@ -109,7 +111,7 @@ class Democracy:
                 file.write(str(lawNR))
 
             with open("var/motions.txt", "a") as file:
-                msg = "**$" + str(lawNR) + ":** " + self.mot + "\n - Votes: "
+                msg = "**$" + str(lawNR) + ":** " + self.mot + "\n**Proposal by:** " + self.proposalBy + "\n - Votes: "
                 msg += "For: "
                 for voter in self.yes:
                     msg += "<@" + voter + ">, "
