@@ -41,38 +41,38 @@ class Democracy:
 
     async def motionHandler(self, edit = False):
         """Motion handler."""
-        self.motionEmbed(edit = edit)
+        if self.date == 0:
+            await self.bot.say("No motion in progress.")
+        else:
+            self.motionEmbed(edit = edit)
 
-        # Checks for approval.
-        if len(self.yes) >= self.approvalNeeded:
-            # Vote passes
-            await self.bot.say("**Motion:**\n" + self.mot + "\n **Passed.**")
-            await self.resetMotion(passed = True)
+            # Checks for approval.
+            if len(self.yes) >= self.approvalNeeded:
+                # Vote passes
+                await self.bot.say("**Motion:**\n" + self.mot + "\n **Passed.**")
+                await self.resetMotion(passed = True)
 
-        # Checks for disapproval.
-        if len(self.no) >= self.approvalNeeded:
-            # Vote failed
-            await self.bot.say("**Motion:**\n" + self.mot + "\n **Failed.**")
-            await self.resetMotion(passed = False)
+            # Checks for disapproval.
+            if len(self.no) >= self.approvalNeeded:
+                # Vote failed
+                await self.bot.say("**Motion:**\n" + self.mot + "\n **Failed.**")
+                await self.resetMotion(passed = False)
 
 
     async def motionEmbed(self, edit = False):
         """Motion display."""
-        if self.date == 0:
-            await self.bot.say("No motion in progress.")
-        else:
-            # Create the embed
-            embed=discord.Embed(title="Motion in progress")
-            embed.add_field(name="------------------", value=self.mot, inline=False)
-            value = "\U00002705 " + str(len(self.yes)) + "  |  \U0000274E " + str(len(self.no)) + "  |  \U00002611 " + str(len(self.abs))
-            embed.add_field(name="Votes", value=value, inline=True)
-            embed.set_footer(text=str(self.date))
+        # Create the embed
+        embed=discord.Embed(title="Motion in progress")
+        embed.add_field(name="------------------", value=self.mot, inline=False)
+        value = "\U00002705 " + str(len(self.yes)) + "  |  \U0000274E " + str(len(self.no)) + "  |  \U00002611 " + str(len(self.abs))
+        embed.add_field(name="Votes", value=value, inline=True)
+        embed.set_footer(text=str(self.date))
 
-            if edit: # Update already existing embed
-                for motionMsg in self.lastMotionMsg:
-                        await self.bot.edit_message(self.lastMotionMsg, embed=embed)
-            else: # Create a new embed
-                self.lastMotionMsg.append = await self.bot.say(embed=embed)
+        if edit: # Update already existing embed
+            for motionMsg in self.lastMotionMsg:
+                    await self.bot.edit_message(self.lastMotionMsg, embed=embed)
+        else: # Create a new embed
+            self.lastMotionMsg.append = await self.bot.say(embed=embed)
                 
 
     async def resetMotion(self, passed = False):
