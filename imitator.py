@@ -12,7 +12,7 @@ import config
 prefix = '!'
 
 # this specifies what extensions to load when the bot starts up
-startup_extensions = ["silly","maths","info","misc"]
+startup_extensions = ["silly","maths","info","misc","democracy"]
 
 bot = commands.Bot(command_prefix=prefix, description='Test Bot, Please Ignore')
 
