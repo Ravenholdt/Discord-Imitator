@@ -16,7 +16,7 @@ class Silly:
         if count < maxcount:    
             for x in range(1,count+1):
                 await self.bot.say(x)
-                asyncio.sleep(0.5)
+                await asyncio.sleep(0.5)
         else:
             await self.bot.say("Yeah? Well, YOU count to " + str(count) + "!")
 
