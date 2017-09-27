@@ -6,15 +6,18 @@ import datetime
 
 class Democracy:
     
-    mot = "None."
-    date = 0
+    mot = "None." # Keeps track of the current Motion.
+    date = 0 # Keeps track of when the current motion started.
 
+    motPassed = False # Flag for wether the motion has failed or not.
+
+    # Ballot
     yes = []
     no = []
     abs = []
 
     approvalNeeded = 4 # How many "yes" is needed to pass a vote.
-    lastMotionMsg = []
+    lastMotionMsg = [] # List of all Motion embeds for editing.
 
     def __init__(self, bot):
         self.bot = bot
@@ -49,20 +52,35 @@ class Democracy:
             # Checks for approval.
             if len(self.yes) >= self.approvalNeeded:
                 # Vote passes
-                await self.bot.say("**Motion:**\n" + self.mot + "\n **Passed.**")
-                await self.resetMotion(passed = True)
+                #await self.bot.say("**Motion:**\n" + self.mot + "\n **Passed.**")
+                self.motPassed = True
+                await self.motionEmbed(edit = True) # Edit all previous embeds
+                await self.motionEmbed(edit = False, ended = True) # Create an ending embed.
+                await self.resetMotion(passed = True) # Reset the voting.
 
             # Checks for disapproval.
             if len(self.no) >= self.approvalNeeded:
                 # Vote failed
-                await self.bot.say("**Motion:**\n" + self.mot + "\n **Failed.**")
-                await self.resetMotion(passed = False)
+                #await self.bot.say("**Motion:**\n" + self.mot + "\n **Failed.**")
+                await self.motionEmbed(edit = True) # Edit all previous Embeds
+                await self.motionEmbed(edit = False, ended = True) # Create an ending embed.
+                await self.resetMotion(passed = False) # Reset the voting.
 
 
-    async def motionEmbed(self, edit = False):
+    async def motionEmbed(self, edit = False, ended = False):
         """Motion display."""
+
+        # Changes between in progress, passed or failed.
+        status = "in progress."
+        if ended:
+            if self.motPassed:
+                status = "Passed."
+            else:
+                status = "Failed."
+
         # Create the embed
-        embed=discord.Embed(title="Motion in progress")
+        embTitle = "Motion " + status
+        embed=discord.Embed(title=embTitle)
         embed.add_field(name="------------------", value=self.mot, inline=False)
         value = "\U00002705 " + str(len(self.yes)) + "  |  \U0000274E " + str(len(self.no)) + "  |  \U00002611 " + str(len(self.abs))
         embed.add_field(name="Votes", value=value, inline=True)
