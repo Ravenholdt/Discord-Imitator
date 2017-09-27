@@ -13,6 +13,7 @@ class Democracy:
     no = []
     abs = []
 
+    approvalNeeded = 3 # How many "yes" is needed to pass a vote.
     lastMotionMsg = 0
 
     def __init__(self, bot):
@@ -38,6 +39,7 @@ class Democracy:
 
 
     async def motionEmbed(self, edit = False):
+        """Motion handler"""
         if self.date == 0:
             await self.bot.say("No motion in progress.")
         else:
@@ -52,6 +54,50 @@ class Democracy:
             else:
                 self.lastMotionMsg = await self.bot.say(embed=embed)
 
+            # Checks for approval.
+            if len(self.yes >= approvalNeeded):
+                # Vote passes
+                await self.bot.say("**Motion:**\n" + self.mot + "\n **Passed.**")
+                await self.resetMotion(True)
+                
+
+    async def resetMotion(self, passed = False):
+
+        lawNR = 0
+
+        if passed == True:
+            with open("var/motionsNR.txt", "r+") as file:
+                lawNR = int(file.readline())
+                lawNR += 1
+                file.write(lawNR)
+            with open("var/motions.txt", "a") as file:
+                msg = "$" + lawNR + ": " + self.mot + "\n - Votes: "
+                msg += "For: "
+                for voter in self.yes:
+                    msg += "<@" + voter + ">, "
+                    self.yes.remove(voter)
+
+                msg += " Against: "
+                for voter in self.no:
+                    msg += "<@" + voter + ">, "
+                    self.no.remove(voter)
+
+                msg += " Abstain: "
+                for voter in self.abs:
+                    msg += "<@" + voter + ">, "
+                    self.abs.remove(voter)
+        
+        else:
+            for voter in self.yes:
+                self.yes.remove(voter)
+            for voter in self.no:
+                self.no.remove(voter)
+            for voter in self.abs:
+                self.abs.remove(voter)
+
+        lastMotionMsg = 0
+        self.date = 0
+        self.mot = "None."
 
 
 
