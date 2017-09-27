@@ -14,7 +14,7 @@ class Democracy:
     abs = []
 
     approvalNeeded = 3 # How many "yes" is needed to pass a vote.
-    lastMotionMsg = 0
+    lastMotionMsg = []
 
     def __init__(self, bot):
         self.bot = bot
@@ -44,6 +44,7 @@ class Democracy:
         if self.date == 0:
             await self.bot.say("No motion in progress.")
         else:
+            # Create the embed
             embed=discord.Embed(title="Motion in progress")
             embed.add_field(name="------------------", value=self.mot, inline=False)
             value = "\U00002705 " + str(len(self.yes)) + "  |  \U0000274E " + str(len(self.no)) + "  |  \U00002611 " + str(len(self.abs))
@@ -65,12 +66,18 @@ class Democracy:
                 # Vote failed
                 await self.bot.say("**Motion:**\n" + self.mot + "\n **Failed.**")
                 await self.resetMotion(False)
+            if edit: # Update already existing embed
+                for motionMsg in self.lastMotionMsg:
+                        await self.bot.edit_message(self.lastMotionMsg, embed=embed)
+            else: # Create a new embed
+                self.lastMotionMsg.append = await self.bot.say(embed=embed)
                 
 
     async def resetMotion(self, passed = False):
 
         lawNR = 0
 
+        # If the motion passed
         if passed == True:
             with open("var/motionsNR.txt", "r+") as file:
                 lawNR = int(file.readline())
@@ -93,6 +100,7 @@ class Democracy:
                     msg += "<@" + voter + ">, "
                     self.abs.remove(voter)
         
+        # If the motion failed
         else:
             for voter in self.yes:
                 self.yes.remove(voter)
@@ -101,7 +109,8 @@ class Democracy:
             for voter in self.abs:
                 self.abs.remove(voter)
 
-        lastMotionMsg = 0
+        for motionMsg in self.lastMotionMsg:
+            self.lastMotionMsg.remove(motionMsg)
         self.date = 0
         self.mot = "None."
 
