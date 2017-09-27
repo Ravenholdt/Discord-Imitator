@@ -13,7 +13,7 @@ class Democracy:
     no = []
     abs = []
 
-    approvalNeeded = 3 # How many "yes" is needed to pass a vote.
+    approvalNeeded = 4 # How many "yes" is needed to pass a vote.
     lastMotionMsg = []
 
     def __init__(self, bot):
@@ -82,12 +82,16 @@ class Democracy:
 
         # If the motion passed
         if passed == True:
-            with open("var/motionsNR.txt", "r+") as file:
+            with open("var/motionsNR.txt", "r") as file:
                 lawNR = int(file.readline())
-                lawNR += 1
-                file.write(lawNR)
+
+            lawNR += 1
+
+            with open("var/motionsNR.txt", "w") as file:
+                file.write(str(lawNR))
+
             with open("var/motions.txt", "a") as file:
-                msg = "$" + lawNR + ": " + self.mot + "\n - Votes: "
+                msg = "$" + str(lawNR) + ": " + self.mot + "\n - Votes: "
                 msg += "For: "
                 for voter in self.yes:
                     msg += "<@" + voter + ">, "
@@ -102,6 +106,8 @@ class Democracy:
                 for voter in self.abs:
                     msg += "<@" + voter + ">, "
                     self.abs.remove(voter)
+
+                file.write(msg + "\n")
         
         # If the motion failed
         else:
