@@ -39,8 +39,25 @@ class Democracy:
         
 
 
+    async def motionHandler(self, edit = False):
+        """Motion handler."""
+        self.motionEmbed(edit = edit)
+
+        # Checks for approval.
+        if len(self.yes) >= self.approvalNeeded:
+            # Vote passes
+            await self.bot.say("**Motion:**\n" + self.mot + "\n **Passed.**")
+            await self.resetMotion(passed = True)
+
+        # Checks for disapproval.
+        if len(self.no) >= self.approvalNeeded:
+            # Vote failed
+            await self.bot.say("**Motion:**\n" + self.mot + "\n **Failed.**")
+            await self.resetMotion(passed = False)
+
+
     async def motionEmbed(self, edit = False):
-        """Motion handler"""
+        """Motion display."""
         if self.date == 0:
             await self.bot.say("No motion in progress.")
         else:
@@ -51,21 +68,6 @@ class Democracy:
             embed.add_field(name="Votes", value=value, inline=True)
             embed.set_footer(text=str(self.date))
 
-            if edit:
-                await self.bot.edit_message(self.lastMotionMsg, embed=embed)
-            else:
-                self.lastMotionMsg = await self.bot.say(embed=embed)
-
-            # Checks for approval.
-            if len(self.yes) >= self.approvalNeeded:
-                # Vote passes
-                await self.bot.say("**Motion:**\n" + self.mot + "\n **Passed.**")
-                await self.resetMotion(True)
-
-            if len(self.no) >= self.approvalNeeded:
-                # Vote failed
-                await self.bot.say("**Motion:**\n" + self.mot + "\n **Failed.**")
-                await self.resetMotion(False)
             if edit: # Update already existing embed
                 for motionMsg in self.lastMotionMsg:
                         await self.bot.edit_message(self.lastMotionMsg, embed=embed)
