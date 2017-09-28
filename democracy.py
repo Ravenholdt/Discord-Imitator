@@ -55,15 +55,15 @@ class Democracy:
             # Checks for approval.
             if len(self.yes) >= self.approvalNeeded:
                 # Vote passes
-                await self.motionEmbed(edit = True, "Passed.") # Edit all previous Embeds
-                await self.motionEmbed(edit = False, "Passed.") # Create an ending embed.
+                await self.motionEmbed(edit = True, status = "Passed.") # Edit all previous Embeds
+                await self.motionEmbed(edit = False, status = "Passed.") # Create an ending embed.
                 await self.resetMotion(passed = True) # Reset the voting.
 
             # Checks for disapproval.
             if len(self.no) >= self.approvalNeeded:
                 # Vote failed
-                await self.motionEmbed(edit = True, "Failed.") # Edit all previous Embeds
-                await self.motionEmbed(edit = False, "Failed.") # Create an ending embed.
+                await self.motionEmbed(edit = True, status = "Failed.") # Edit all previous Embeds
+                await self.motionEmbed(edit = False, status = "Failed.") # Create an ending embed.
                 await self.resetMotion(passed = False) # Reset the voting.
 
 
@@ -102,7 +102,7 @@ class Democracy:
 
             # Save the new law.
             with open("var/motions.txt", "a") as file:
-                msg = "**$" + str(lawNR) + ":** " + self.mot + "\n**Proposal by:** " + self.proposalBy + "\n - Votes: "
+                msg = "**$" + str(lawNR) + ":** " + self.mot + "\n**Proposal by:** <@" + self.proposalBy + ">\n - Votes: "
 
                 msg += "For: "
                 for voter in self.yes:
@@ -181,7 +181,7 @@ class Democracy:
                 self.no.append(voter)
                 await self.bot.add_reaction(ctx.message, "\U0000274E") # No
 
-            elif ballot == "abstain"
+            elif ballot == "abstain":
                 self.abs.append(voter)
                 await self.bot.add_reaction(ctx.message, "\U00002611") # Abstain
 
