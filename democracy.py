@@ -16,6 +16,7 @@ class Democracy:
     abs = []
 
     approvalNeeded = 4 # How many "yes" is needed to pass a vote.
+    numberOfBots = 2
     lastMotionMsg = [] # List of all Motion embeds for editing.
 
     def __init__(self, bot):
@@ -47,6 +48,9 @@ class Democracy:
             await self.bot.say("No motion in progress.")
         else:
             await self.motionEmbed(edit = edit)
+
+            users = self.bot.servers[0].member_count - self.numberOfBots
+            self.approvalNeeded = (users / 2) + 1
 
             # Checks for approval.
             if len(self.yes) >= self.approvalNeeded:
