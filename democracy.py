@@ -10,8 +10,6 @@ class Democracy:
     date = 0 # Keeps track of when the current motion started.
     proposalBy = 0
 
-    motPassed = False # Flag for wether the motion has failed or not.
-
     # Ballot
     yes = []
     no = []
@@ -43,7 +41,6 @@ class Democracy:
         await self.motionHandler()
         
 
-
     async def motionHandler(self, edit = False):
         """Motion handler."""
         if self.date == 0:
@@ -54,31 +51,20 @@ class Democracy:
             # Checks for approval.
             if len(self.yes) >= self.approvalNeeded:
                 # Vote passes
-                #await self.bot.say("**Motion:**\n" + self.mot + "\n **Passed.**")
-                self.motPassed = True
-                await self.motionEmbed(edit = True, ended = True) # Edit all previous embeds
-                await self.motionEmbed(edit = False, ended = True) # Create an ending embed.
+                await self.motionEmbed(edit = True, "Passed.") # Edit all previous Embeds
+                await self.motionEmbed(edit = False, "Passed.") # Create an ending embed.
                 await self.resetMotion(passed = True) # Reset the voting.
 
             # Checks for disapproval.
             if len(self.no) >= self.approvalNeeded:
                 # Vote failed
-                #await self.bot.say("**Motion:**\n" + self.mot + "\n **Failed.**")
-                await self.motionEmbed(edit = True, ended = True) # Edit all previous Embeds
-                await self.motionEmbed(edit = False, ended = True) # Create an ending embed.
+                await self.motionEmbed(edit = True, "Failed.") # Edit all previous Embeds
+                await self.motionEmbed(edit = False, "Failed.") # Create an ending embed.
                 await self.resetMotion(passed = False) # Reset the voting.
 
 
-    async def motionEmbed(self, edit = False, ended = False):
+    async def motionEmbed(self, edit = False, status = "in progress."):
         """Motion display."""
-
-        # Changes between in progress, passed or failed.
-        status = "in progress."
-        if ended:
-            if self.motPassed:
-                status = "Passed."
-            else:
-                status = "Failed."
 
         # Create the embed
         embTitle = "Motion " + status
@@ -97,6 +83,7 @@ class Democracy:
                 
 
     async def resetMotion(self, passed = False):
+        """Resets the voting."""
 
         lawNR = 0
 
@@ -112,6 +99,7 @@ class Democracy:
 
             with open("var/motions.txt", "a") as file:
                 msg = "**$" + str(lawNR) + ":** " + self.mot + "\n**Proposal by:** " + self.proposalBy + "\n - Votes: "
+
                 msg += "For: "
                 for voter in self.yes:
                     msg += "<@" + voter + ">, "
@@ -152,54 +140,44 @@ class Democracy:
     @vote.command(pass_context=True)
     async def yay(self, ctx):
         """Vote yes!"""
-        if not self.date == 0:
-            voter = ctx.message.author.id
-
-            if voter in self.yes:
-                return
-            elif voter in self.no:
-                self.no.remove(voter)
-            elif voter in self.abs:
-                self.abs.remove(voter)
-            
-            self.yes.append(voter)
-            await self.bot.add_reaction(ctx.message, "\U00002705")
-
-        await self.motionHandler(edit = True)
+        voter = ctx.message.author.id # Get id of the voter
+        await self.votingHandler(voter, "yes")
 
     @vote.command(pass_context=True)
     async def nay(self, ctx):
         """Vote no!"""
-        if not self.date == 0:
-            voter = ctx.message.author.id
-
-            if voter in self.yes:
-                self.yes.remove(voter)
-            elif voter in self.no:
-                return
-            elif voter in self.abs:
-                self.abs.remove(voter)
-            
-            self.no.append(voter)
-            await self.bot.add_reaction(ctx.message, "\U0000274E")
-
-        await self.motionHandler(edit = True)
+        voter = ctx.message.author.id # Get id of the voter
+        await self.votingHandler(voter, "nay")
 
     @vote.command(pass_context=True)
     async def abstain(self, ctx):
         """Beggars can't be choosers."""
+        voter = ctx.message.author.id # Get id of the voter
+        await self.votingHandler(voter, "abstain")
+
+
+    async def votingHandler(self, voter, ballot : str):
+        """Voting handler."""
         if not self.date == 0:
-            voter = ctx.message.author.id
 
             if voter in self.yes:
                 self.yes.remove(voter)
             elif voter in self.no:
                 self.no.remove(voter)
             elif voter in self.abs:
-                return
+                self.abs.remove(voter)
+            
+            if ballot == "yay":
+                self.yes.append(voter)
+                await self.bot.add_reaction(ctx.message, "\U00002705") # Yes
 
-            self.abs.append(voter)
-            await self.bot.add_reaction(ctx.message, "\U00002611")
+            elif ballot == "nay":
+                self.no.append(voter)
+                await self.bot.add_reaction(ctx.message, "\U0000274E") # No
+
+            elif ballot == "abstain"
+                self.abs.append(voter)
+                await self.bot.add_reaction(ctx.message, "\U00002611") # Abstain
 
         await self.motionHandler(edit = True)
 
