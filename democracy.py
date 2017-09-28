@@ -85,18 +85,18 @@ class Democracy:
     async def resetMotion(self, passed = False):
         """Resets the voting."""
 
-        lawNR = 0
-
         # If the motion passed
         if passed == True:
+            
+            # Keep track of the number of laws.
+            lawNR = 0
             with open("var/motionsNR.txt", "r") as file:
-                lawNR = int(file.readline())
-
+                lawNR = int(file.readline()) # Read current law number from file.
             lawNR += 1
-
             with open("var/motionsNR.txt", "w") as file:
-                file.write(str(lawNR))
+                file.write(str(lawNR)) # Save passed law number to file
 
+            # Save the new law.
             with open("var/motions.txt", "a") as file:
                 msg = "**$" + str(lawNR) + ":** " + self.mot + "\n**Proposal by:** " + self.proposalBy + "\n - Votes: "
 
@@ -126,8 +126,10 @@ class Democracy:
             for voter in self.abs:
                 self.abs.remove(voter)
 
+        # Clear the motion list.
         for motionMsg in self.lastMotionMsg:
             self.lastMotionMsg.remove(motionMsg)
+
         self.date = 0
         self.mot = "None."
 
