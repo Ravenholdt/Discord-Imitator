@@ -17,8 +17,8 @@ class Motion(object):
 
     lastMsg = [] # List of all Motion embeds for editing.
 
-    def __init__(motion, proposalBy):
-        self.motion = motion
+    def __init__(mot, proposalBy):
+        self.motion = mot
         self.proposalBy = proposalBy
         self.date = datetime.datetime.now()
 
