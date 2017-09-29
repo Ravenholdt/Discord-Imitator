@@ -55,6 +55,13 @@ class Misc:
         """Links to the bot's github."""
         link = "https://github.com/Ravenholdt/Discord-Imitator"
         await self.bot.say(link)
+
+
+    @commands.command()
+    async def bank(operation : str, amount : int, recipient : str):
+        """Ravenbank"""
+        if operation == "transfer":
+            await bot.say(str(amount) + " EUR transfered to " + recipient + ".")
         
 
 def setup(bot):

@@ -15,8 +15,8 @@ class Democracy:
     no = []
     abs = []
 
-    approvalNeeded = 4 # How many "yes" is needed to pass a vote.
-    numberOfBots = 2
+    approvalNeeded = 1 # How many "yes" is needed to pass a vote.
+    numberOfBots = 1 #2 # DEBUG
     lastMotionMsg = [] # List of all Motion embeds for editing.
 
     def __init__(self, bot):
@@ -49,8 +49,8 @@ class Democracy:
         else:
             await self.motionEmbed(edit = edit)
 
-            users = self.bot.servers[0].member_count - self.numberOfBots
-            self.approvalNeeded = (users / 2) + 1
+#            users = int(self.bot.servers[0].member_count) - self.numberOfBots
+#            self.approvalNeeded = (users / 2) #+ 1 # DEBUG
 
             # Checks for approval.
             if len(self.yes) >= self.approvalNeeded:
@@ -146,25 +146,23 @@ class Democracy:
     @vote.command(pass_context=True)
     async def yay(self, ctx):
         """Vote yes!"""
-        voter = ctx.message.author.id # Get id of the voter
-        await self.votingHandler(voter, "yes")
+        await self.votingHandler(ctx, "yay")
 
     @vote.command(pass_context=True)
     async def nay(self, ctx):
         """Vote no!"""
-        voter = ctx.message.author.id # Get id of the voter
-        await self.votingHandler(voter, "nay")
+        await self.votingHandler(ctx, "nay")
 
     @vote.command(pass_context=True)
     async def abstain(self, ctx):
         """Beggars can't be choosers."""
-        voter = ctx.message.author.id # Get id of the voter
-        await self.votingHandler(voter, "abstain")
+        await self.votingHandler(ctx, "abstain")
 
 
-    async def votingHandler(self, voter, ballot : str):
+    async def votingHandler(self, ctx, ballot : str):
         """Voting handler."""
         if not self.date == 0:
+            voter = ctx.message.author.id # Get id of the voter
 
             if voter in self.yes:
                 self.yes.remove(voter)
