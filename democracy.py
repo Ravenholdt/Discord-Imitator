@@ -22,6 +22,7 @@ class Motion(object):
         self.proposalBy = proposalBy
         self.date = datetime.datetime.now()
 
+
 class Democracy:
     
     mot = 0
@@ -52,7 +53,7 @@ class Democracy:
 
     async def motionHandler(self, edit = False):
         """Motion handler."""
-        if self.date == 0:
+        if self.mot == 0:
             await self.bot.say("No motion in progress.")
         else:
             await self.motionEmbed(edit = edit)
@@ -154,7 +155,7 @@ class Democracy:
 
     async def votingHandler(self, ctx, ballot : str):
         """Voting handler."""
-        if not self.date == 0:
+        if not self.mot == 0:
             voter = ctx.message.author.id # Get id of the voter
 
             if voter in self.yes:
