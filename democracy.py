@@ -146,17 +146,17 @@ class Democracy:
     @vote.command(pass_context=True)
     async def yay(self, ctx):
         """Vote yes!"""
-        await self.votingHandler(ctx, voter, "yes")
+        await self.votingHandler(ctx, "yes")
 
     @vote.command(pass_context=True)
     async def nay(self, ctx):
         """Vote no!"""
-        await self.votingHandler(ctx, voter, "nay")
+        await self.votingHandler(ctx, "nay")
 
     @vote.command(pass_context=True)
     async def abstain(self, ctx):
         """Beggars can't be choosers."""
-        await self.votingHandler(ctx, voter, "abstain")
+        await self.votingHandler(ctx, "abstain")
 
 
     async def votingHandler(self, ctx, ballot : str):
