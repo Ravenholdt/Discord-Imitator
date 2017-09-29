@@ -141,7 +141,7 @@ class Democracy:
 
             # Save the new law.
             with open("var/motions.txt", "a") as file:
-                msg = "**$" + str(lawNR) + ":** " + self.mot + "\n**Proposal by:** <@" + self.proposalBy + ">\n - Votes: "
+                msg = "**$" + str(lawNR) + ":** " + self.mot.motion + "\n**Proposal by:** <@" + self.proposalBy + ">\n - Votes: "
 
                 msg += "For: "
                 for voter in self.mot.yes:
