@@ -13,17 +13,17 @@ class Motion:
 #    date = 0 # Keeps track of when the current motion started.
 #    proposalBy = 0
 
-    # Ballot
-    yes = []
-    no = []
-    abs = []
-
     lastMsg = [] # List of all Motion embeds for editing.
 
     def __init__(self, newMotion, newProp):
         self.motion = newMotion
         self.proposalBy = newProp
         self.date = datetime.datetime.now()
+
+        # Ballot
+        self.yes = []
+        self.no = []
+        self.abs = []
 
 
 class Democracy:
