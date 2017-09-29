@@ -7,6 +7,9 @@ import os.path
 import os
 import pickle
 
+import config
+
+
 class Motion:
     
 #    motion = "None." # Keeps track of the current Motion.
@@ -31,13 +34,17 @@ class Democracy:
     mot = 0
     motionFile = "var/motion"
 
-    approvalNeeded = 2 # How many "yes" is needed to pass a vote.
-    numberOfBots = 1 #2 # DEBUG
+    approvalNeeded = 5 # How many "yes" is needed to pass a vote.
+    numberOfBots = 2 #2 # DEBUG
 
     def __init__(self, bot):
         self.bot = bot
         if os.path.isfile(self.motionFile):
             self.mot = pickle.load( open(self.motionFile, "rb") )
+
+        if config.gitDev:
+            approvalNeeded = 1 # How many "yes" is needed to pass a vote.
+            numberOfBots = 1 #2 # DEBUG
 
 
     @commands.group(pass_context=True)
