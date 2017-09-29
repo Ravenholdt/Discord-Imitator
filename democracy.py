@@ -7,7 +7,7 @@ import os.path
 import os
 import pickle
 
-class Motion(object):
+class Motion:
     
 #    motion = "None." # Keeps track of the current Motion.
 #    date = 0 # Keeps track of when the current motion started.
@@ -52,6 +52,7 @@ class Democracy:
         """Create a new motion."""
         if self.mot == 0:
             self.mot = Motion(newMotion = motion, newProp = ctx.message.author.id)
+            pickle.dump( self.mot, open(self.motionFile, "wb") )
             
         # Inform users that new motion started.
         await self.motionHandler()
@@ -64,7 +65,8 @@ class Democracy:
         else:
             await self.motionEmbed(edit = edit)
 
-            pickle.dump( self.mot, open(self.motionFile, "wb") )
+            if edit:
+                pickle.dump( self.mot, open(self.motionFile, "wb") )
 
 #            users = int(self.bot.servers[0].member_count) - self.numberOfBots
 #            self.approvalNeeded = (users / 2) #+ 1 # DEBUG
