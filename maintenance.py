@@ -18,7 +18,7 @@ class Maintenance:
     extension_path = ""#"functions/"
 
     @commands.command()
-    async def update(self, devBranch = "development", reboot = False):
+    async def update(self, devBranch = "development"):
 
         branch = ""
         if config.gitDev:
@@ -26,11 +26,8 @@ class Maintenance:
 
         os.system("git pull origin " + branch)
 
-        if reboot == False:
-            await self.loadAll()
-            self.bot.say("System updated.")
-        else:
-            self.bot.unload_extension(extension_name)
+        await self.loadAll()
+        self.bot.say("System updated.")
 
 
     async def loadAll(self):
