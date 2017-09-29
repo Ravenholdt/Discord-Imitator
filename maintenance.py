@@ -32,7 +32,7 @@ class Maintenance:
 
     async def loadAll(self):
         for extension in self.startup_extensions:
-            self.bot.unload_extensionU(self.extension_path + extension)
+            self.bot.unload_extension(self.extension_path + extension)
             try:
                 self.bot.load_extension(self.extension_path + extension)
             except Exception as e:
