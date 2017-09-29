@@ -11,6 +11,8 @@ class Maintenance:
     def __init__(self, bot):
         self.bot = bot
 
+    maint_loaded = True
+
     # this specifies what extensions to load when the bot starts up
     startup_extensions = ["silly","maths","info","misc","democracy"]
     extension_path = ""#"functions/"
