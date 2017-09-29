@@ -3,6 +3,9 @@ from discord.ext import commands
 import asyncio
 
 import datetime
+import os.path
+import os
+import pickle
 
 class Motion(object):
     
@@ -26,12 +29,15 @@ class Motion(object):
 class Democracy:
     
     mot = 0
+    motionFile = "var/motion"
 
     approvalNeeded = 2 # How many "yes" is needed to pass a vote.
     numberOfBots = 1 #2 # DEBUG
 
     def __init__(self, bot):
         self.bot = bot
+        if os.path.isfile(self.motionFile):
+            self.mot = pickle.load( open(self.motionFile, "rb") )
 
 
     @commands.group(pass_context=True)
@@ -57,6 +63,8 @@ class Democracy:
             await self.bot.say("No motion in progress.")
         else:
             await self.motionEmbed(edit = edit)
+
+            pickle.dump( self.mot, open(self.motionFile, "wb") )
 
 #            users = int(self.bot.servers[0].member_count) - self.numberOfBots
 #            self.approvalNeeded = (users / 2) #+ 1 # DEBUG
@@ -130,6 +138,7 @@ class Democracy:
 
         # Clear the motion.
         self.mot = 0
+        os.remove(self.motionFile)
 
 
 
