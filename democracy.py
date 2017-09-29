@@ -15,8 +15,8 @@ class Democracy:
     no = []
     abs = []
 
-    approvalNeeded = 1 # How many "yes" is needed to pass a vote.
-    numberOfBots = 1 #2 # DEBUG
+    approvalNeeded = 5 # How many "yes" is needed to pass a vote.
+    numberOfBots = 2 #2 # DEBUG
     lastMotionMsg = [] # List of all Motion embeds for editing.
 
     def __init__(self, bot):
