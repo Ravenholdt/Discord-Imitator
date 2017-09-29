@@ -49,8 +49,8 @@ class Democracy:
         else:
             await self.motionEmbed(edit = edit)
 
-            users = int(self.bot.servers[0].member_count) - self.numberOfBots
-            self.approvalNeeded = (users / 2) #+ 1 # DEBUG
+#            users = int(self.bot.servers[0].member_count) - self.numberOfBots
+#            self.approvalNeeded = (users / 2) #+ 1 # DEBUG
 
             # Checks for approval.
             if len(self.yes) >= self.approvalNeeded:
