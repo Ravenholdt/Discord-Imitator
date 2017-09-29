@@ -62,14 +62,14 @@ class Democracy:
 #            self.approvalNeeded = (users / 2) #+ 1 # DEBUG
 
             # Checks for approval.
-            if len(self.yes) >= self.approvalNeeded:
+            if len(self.mot.yes) >= self.approvalNeeded:
                 # Vote passes
                 await self.motionEmbed(edit = True, status = "Passed.") # Edit all previous Embeds
                 await self.motionEmbed(edit = False, status = "Passed.") # Create an ending embed.
                 await self.resetMotion(passed = True) # Reset the voting.
 
             # Checks for disapproval.
-            if len(self.no) >= self.approvalNeeded:
+            if len(self.mot.no) >= self.approvalNeeded:
                 # Vote failed
                 await self.motionEmbed(edit = True, status = "Failed.") # Edit all previous Embeds
                 await self.motionEmbed(edit = False, status = "Failed.") # Create an ending embed.
