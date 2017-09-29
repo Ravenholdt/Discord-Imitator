@@ -99,7 +99,7 @@ class Democracy:
                 await self.resetMotion(passed = True) # Reset the voting.
 
             # Checks for disapproval.
-            if len(self.mot.no) >= self.approvalNeeded:
+            elif len(self.mot.no) >= self.approvalNeeded:
                 # Vote failed
                 await self.motionEmbed(edit = True, status = "Failed.") # Edit all previous Embeds
                 await self.motionEmbed(edit = False, status = "Failed.") # Create an ending embed.
@@ -113,6 +113,7 @@ class Democracy:
         embTitle = "Motion " + status
         embed=discord.Embed(title=embTitle)
         embed.add_field(name="------------------", value=self.mot.motion, inline=False)
+
         value = "\U00002705 " + str(len(self.mot.yes)) + "  |  \U0000274E " + str(len(self.mot.no)) + "  |  \U00002611 " + str(len(self.mot.abs))
         embed.add_field(name="Votes", value=value, inline=True)
         embed.set_footer(text= "Proposal by: <@" + self.mot.proposalBy + ">  " + str(self.mot.date))
