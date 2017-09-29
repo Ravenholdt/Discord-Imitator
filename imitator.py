@@ -4,6 +4,8 @@ import discord
 from discord.ext import commands
 import asyncio
 
+import time
+
 import config
 prefix = '!'
 
@@ -21,6 +23,7 @@ if __name__ == "__main__":
     try:
         extension = "maintenance"
         bot.load_extension(extension)
+        time.sleep(1)
         bot.get_cog(extension).loadAll()
     except Exception as e:
         exc = '{}: {}'.format(type(e).__name__, e)
