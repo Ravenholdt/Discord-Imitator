@@ -6,9 +6,9 @@ import datetime
 
 class Motion(object):
     
-    motion = "None." # Keeps track of the current Motion.
-    date = 0 # Keeps track of when the current motion started.
-    proposalBy = 0
+#    motion = "None." # Keeps track of the current Motion.
+#    date = 0 # Keeps track of when the current motion started.
+#    proposalBy = 0
 
     # Ballot
     yes = []
