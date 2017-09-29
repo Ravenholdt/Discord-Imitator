@@ -29,6 +29,8 @@ class Motion:
         self.abs = []
 
 
+
+
 class Democracy:
     
     mot = 0
@@ -59,6 +61,13 @@ class Democracy:
                 self.numberOfBots = 1 #2 # DEBUG
         except:
             pass
+
+        # Check for folder, add if it doesn't exist.
+        directory = os.path.dirname("var")
+        try:
+            os.stat(directory)
+        except:
+            os.mkdir(directory) 
 
     @commands.group(pass_context=True)
     async def motion(self, ctx):
