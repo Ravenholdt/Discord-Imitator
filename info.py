@@ -22,6 +22,12 @@ class Info:
         answer = next(res.results).text
         await self.bot.say("**From Wolfram Alpha:**\n" + answer)
 
+#        embed = discord.Embed(title=word)
+#        embed.add_field(name="Definition", value=definition, inline=False)
+#        embed.add_field(name="Example", value=str(example + "\n\n" + votes), inline=False)
+
+#        await self.bot.say(embed = embed)
+
 
     @commands.command()
     async def wikipedia(self, *, query : str):
