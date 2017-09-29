@@ -11,7 +11,6 @@ prefix = '!'
 
 bot = commands.Bot(command_prefix=prefix, description='Test Bot, Please Ignore')
 
-extension = "maintenance"
 
 @bot.event
 async def on_ready():
@@ -29,17 +28,17 @@ async def maintCheck():
             if bot.get_cog("Maintenance").maint_loaded:
                 pass
         except:
-            loadMaint()
+            await loadMaint()
 
 async def loadMaint():
     try:
-        bot.load_extension(extension)
+        bot.load_extension("maintenance")
     except Exception as e:
         exc = '{}: {}'.format(type(e).__name__, e)
         print('Failed to load extension {}\n{}'.format(extension, exc))
 
 if __name__ == "__main__":
-    loadMaint()
+    await loadMaint()
 
     bot.loop.create_task(maintCheck())
     bot.run(config.discordtoken)
