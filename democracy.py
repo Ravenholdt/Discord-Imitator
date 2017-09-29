@@ -45,7 +45,7 @@ class Democracy:
     async def new(self, ctx, *, motion : str):
         """Create a new motion."""
         if self.mot == 0:
-            self.mot = Motion(motion = motion, proposalBy = ctx.message.author.id)
+            self.mot = Motion(motion, ctx.message.author.id)
             
         # Inform users that new motion started.
         await self.motionHandler()
