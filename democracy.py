@@ -158,23 +158,23 @@ class Democracy:
         if not self.mot == 0:
             voter = ctx.message.author.id # Get id of the voter
 
-            if voter in self.yes:
-                self.yes.remove(voter)
-            elif voter in self.no:
-                self.no.remove(voter)
-            elif voter in self.abs:
-                self.abs.remove(voter)
+            if voter in self.mot.yes:
+                self.mot.yes.remove(voter)
+            elif voter in self.mot.no:
+                self.mot.no.remove(voter)
+            elif voter in self.mot.abs:
+                self.mot.abs.remove(voter)
             
             if ballot == "yay":
-                self.yes.append(voter)
+                self.mot.yes.append(voter)
                 await self.bot.add_reaction(ctx.message, "\U00002705") # Yes
 
             elif ballot == "nay":
-                self.no.append(voter)
+                self.mot.no.append(voter)
                 await self.bot.add_reaction(ctx.message, "\U0000274E") # No
 
             elif ballot == "abstain":
-                self.abs.append(voter)
+                self.mot.abs.append(voter)
                 await self.bot.add_reaction(ctx.message, "\U00002611") # Abstain
 
         await self.motionHandler(edit = True)
