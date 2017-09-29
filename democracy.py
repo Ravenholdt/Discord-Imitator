@@ -12,12 +12,6 @@ import config
 
 class Motion:
     
-#    motion = "None." # Keeps track of the current Motion.
-#    date = 0 # Keeps track of when the current motion started.
-#    proposalBy = 0
-
-    lastMsg = [] # List of all Motion embeds for editing.
-
     def __init__(self, newMotion, newProp):
         self.motion = newMotion
         self.proposalBy = newProp
@@ -28,7 +22,8 @@ class Motion:
         self.no = []
         self.abs = []
 
-
+        # List of all Motion embeds for editing.
+        self.lastMsg = []
 
 
 class Democracy:
@@ -36,7 +31,7 @@ class Democracy:
     mot = 0
     motionFile = "var/motion"
 
-    approvalNeeded = 5 # How many "yes" is needed to pass a vote.
+    approvalNeeded = 5 # How many "yes/no" is needed to pass/fail a vote.
     numberOfBots = 2 #2 # DEBUG
 
     def __init__(self, bot):
