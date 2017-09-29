@@ -39,13 +39,26 @@ class Democracy:
 
     def __init__(self, bot):
         self.bot = bot
+
+        # Load saved motion from file.
         if os.path.isfile(self.motionFile):
             self.mot = pickle.load( open(self.motionFile, "rb") )
 
-        if config.gitDev:
-            self.approvalNeeded = 1 # How many "yes" is needed to pass a vote.
-            self.numberOfBots = 1 #2 # DEBUG
+        if not os.path.isfile("var/motionsNR.txt"):
+            with open("var/motionsNR.txt", "w") as f: 
+                f.write("0")
 
+        if not os.path.isfile("var/motions.txt"): 
+            with open("var/motions.txt", "w") as f: 
+                f.write("")
+
+        # Use different values if it's running with dev code.
+        try:
+            if config.gitDev:
+                self.approvalNeeded = 1 # How many "yes" is needed to pass a vote.
+                self.numberOfBots = 1 #2 # DEBUG
+        except:
+            pass
 
     @commands.group(pass_context=True)
     async def motion(self, ctx):
