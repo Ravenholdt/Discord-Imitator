@@ -6,9 +6,9 @@ import datetime
 
 class Motion(object):
     
-#    motion = "None." # Keeps track of the current Motion.
-#    date = 0 # Keeps track of when the current motion started.
-#    proposalBy = 0
+    motion = "None." # Keeps track of the current Motion.
+    date = 0 # Keeps track of when the current motion started.
+    proposalBy = 0
 
     # Ballot
     yes = []
@@ -17,9 +17,9 @@ class Motion(object):
 
     lastMsg = [] # List of all Motion embeds for editing.
 
-    def __init__(mot, proposalBy):
+    def __init__(mot, prop):
         self.motion = mot
-        self.proposalBy = proposalBy
+        self.proposalBy = prop
         self.date = datetime.datetime.now()
 
 
