@@ -27,7 +27,7 @@ class Maintenance:
         os.system("git pull origin " + branch)
 
         await self.loadAll()
-        self.bot.say("System updated.")
+        await self.bot.say("System updated.")
 
 
     async def loadAll(self):
