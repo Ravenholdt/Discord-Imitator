@@ -4,9 +4,9 @@ import asyncio
 
 import datetime
 
-class Democracy:
+class Motion(object):
     
-    mot = "None." # Keeps track of the current Motion.
+    motion = "None." # Keeps track of the current Motion.
     date = 0 # Keeps track of when the current motion started.
     proposalBy = 0
 
@@ -15,9 +15,19 @@ class Democracy:
     no = []
     abs = []
 
-    approvalNeeded = 1 # How many "yes" is needed to pass a vote.
+    lastMsg = [] # List of all Motion embeds for editing.
+
+    def __init__(motion, proposalBy):
+        self.motion = motion
+        self.proposalBy = proposalBy
+        self.date = datetime.datetime.now()
+
+class Democracy:
+    
+    mot = 0
+
+    approvalNeeded = 2 # How many "yes" is needed to pass a vote.
     numberOfBots = 1 #2 # DEBUG
-    lastMotionMsg = [] # List of all Motion embeds for editing.
 
     def __init__(self, bot):
         self.bot = bot
@@ -33,10 +43,8 @@ class Democracy:
     @motion.command(pass_context=True)
     async def new(self, ctx, *, motion : str):
         """Create a new motion."""
-        if self.date == 0:
-            self.mot = motion
-            self.date = datetime.datetime.now()
-            self.proposalBy = ctx.message.author.id
+        if self.mot == 0:
+            self.mot = Motion(motion = motion, proposalBy = ctx.message.author.id)
             
         # Inform users that new motion started.
         await self.motionHandler()
@@ -73,17 +81,17 @@ class Democracy:
         # Create the embed
         embTitle = "Motion " + status
         embed=discord.Embed(title=embTitle)
-        embed.add_field(name="------------------", value=self.mot, inline=False)
-        value = "\U00002705 " + str(len(self.yes)) + "  |  \U0000274E " + str(len(self.no)) + "  |  \U00002611 " + str(len(self.abs))
+        embed.add_field(name="------------------", value=self.mot.motion, inline=False)
+        value = "\U00002705 " + str(len(self.mot.yes)) + "  |  \U0000274E " + str(len(self.mot.no)) + "  |  \U00002611 " + str(len(self.mot.abs))
         embed.add_field(name="Votes", value=value, inline=True)
-        embed.set_footer(text= "Proposal by: <@" + self.proposalBy + ">  " + str(self.date))
+        embed.set_footer(text= "Proposal by: <@" + self.mot.proposalBy + ">  " + str(self.mot.date))
 
         if edit: # Update already existing embed
-            for motionMsg in self.lastMotionMsg:
+            for motionMsg in self.mot.lastMsg:
                     await self.bot.edit_message(motionMsg, embed=embed)
         else: # Create a new embed
             motMsg = await self.bot.say(embed=embed)
-            self.lastMotionMsg.append(motMsg)
+            self.mot.lastMsg.append(motMsg)
                 
 
     async def resetMotion(self, passed = False):
@@ -105,37 +113,22 @@ class Democracy:
                 msg = "**$" + str(lawNR) + ":** " + self.mot + "\n**Proposal by:** <@" + self.proposalBy + ">\n - Votes: "
 
                 msg += "For: "
-                for voter in self.yes:
+                for voter in self.mot.yes:
                     msg += "<@" + voter + ">, "
-                    self.yes.remove(voter)
 
                 msg += " Against: "
-                for voter in self.no:
+                for voter in self.mot.no:
                     msg += "<@" + voter + ">, "
-                    self.no.remove(voter)
 
                 msg += " Abstain: "
-                for voter in self.abs:
+                for voter in self.mot.abs:
                     msg += "<@" + voter + ">, "
-                    self.abs.remove(voter)
 
                 file.write(msg + "\n")
-        
-        # If the motion failed
-        else:
-            for voter in self.yes:
-                self.yes.remove(voter)
-            for voter in self.no:
-                self.no.remove(voter)
-            for voter in self.abs:
-                self.abs.remove(voter)
 
-        # Clear the motion list.
-        for motionMsg in self.lastMotionMsg:
-            self.lastMotionMsg.remove(motionMsg)
 
-        self.date = 0
-        self.mot = "None."
+        # Clear the motion.
+        self.mot = 0
 
 
 
