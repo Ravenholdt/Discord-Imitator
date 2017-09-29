@@ -16,16 +16,19 @@ class Maintenance:
     extension_path = ""#"functions/"
 
     @commands.command()
-    async def update(self):
+    async def update(self, devBranch = "development", reboot = False):
 
         branch = ""
         if config.gitDev:
-            branch = "development"
+            branch = devBranch
 
         os.system("git pull origin " + branch)
 
-        await self.loadAll()
-        self.bot.say("System updated.")
+        if reboot == False:
+            await self.loadAll()
+            self.bot.say("System updated.")
+        else:
+            self.bot.unload_extension(extension_name)
 
 
     async def loadAll(self):
@@ -38,33 +41,33 @@ class Maintenance:
 
 
     @commands.command()
-    async def load(extension_name : str):
+    async def load(self, extension_name : str):
         """Loads an extension."""
         try:
-            bot.load_extension(extension_name)
+            self.bot.load_extension(extension_name)
         except (AttributeError, ImportError) as e:
-            await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
+            await self.bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
             return
-        await bot.say("{} loaded.".format(extension_name))
+        await self.bot.say("{} loaded.".format(extension_name))
 
 
     @commands.command()
-    async def unload(extension_name : str):
+    async def unload(self, extension_name : str):
         """Unloads an extension."""
-        bot.unload_extension(extension_name)
-        await bot.say("{} unloaded.".format(extension_name))
+        self.bot.unload_extension(extension_name)
+        await self.bot.say("{} unloaded.".format(extension_name))
 
 
     @commands.command()
-    async def reload(extension_name : str):
+    async def reload(self, extension_name : str):
         """Reloads an extension."""
-        bot.unload_extension(extension_name)
+        self.bot.unload_extension(extension_name)
         try:
-            bot.load_extension(extension_name)
+            self.bot.load_extension(extension_name)
         except (AttributeError, ImportError) as e:
-            await bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
+            await self.bot.say("```py\n{}: {}\n```".format(type(e).__name__, str(e)))
             return
-        await bot.say("{} reloaded.".format(extension_name))
+        await self.bot.say("{} reloaded.".format(extension_name))
 
 def setup(bot):
     bot.add_cog(Maintenance(bot))
