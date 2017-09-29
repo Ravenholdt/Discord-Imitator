@@ -58,7 +58,7 @@ class Democracy:
             pass
 
         # Check for folder, add if it doesn't exist.
-        directory = os.path.dirname("var")
+        directory = os.path.dirname("var/")
         try:
             os.stat(directory)
         except:
