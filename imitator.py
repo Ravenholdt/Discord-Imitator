@@ -41,5 +41,5 @@ async def loadMaint():
 if __name__ == "__main__":
     loadMaint()
 
-    loop.create_task(maintCheck())
+    bot.loop.create_task(maintCheck())
     bot.run(config.discordtoken)

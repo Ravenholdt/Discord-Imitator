@@ -18,7 +18,7 @@ class Maintenance:
     extension_path = ""#"functions/"
 
     @commands.command()
-    async def update(self, devBranch = "development"):
+    async def patch(self, devBranch = "development"):
 
         branch = ""
         if config.gitDev:
