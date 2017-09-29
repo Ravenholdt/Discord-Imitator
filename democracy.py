@@ -43,8 +43,8 @@ class Democracy:
             self.mot = pickle.load( open(self.motionFile, "rb") )
 
         if config.gitDev:
-            approvalNeeded = 1 # How many "yes" is needed to pass a vote.
-            numberOfBots = 1 #2 # DEBUG
+            self.approvalNeeded = 1 # How many "yes" is needed to pass a vote.
+            self.numberOfBots = 1 #2 # DEBUG
 
 
     @commands.group(pass_context=True)
