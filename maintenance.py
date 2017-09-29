@@ -13,6 +13,7 @@ class Maintenance:
 
         # this specifies what extensions to load when the bot starts up
         startup_extensions = ["silly","maths","info","misc","democracy"]
+        extension_path = "functions/"
 
         @commands.command()
         async def update(self):
@@ -30,7 +31,7 @@ class Maintenance:
         async def loadAll(self):
             for extension in self.startup_extensions:
                 try:
-                    bot.load_extension(extension)
+                    bot.load_extension(extension_path + extension)
                 except Exception as e:
                     exc = '{}: {}'.format(type(e).__name__, e)
                     print('Failed to load extension {}\n{}'.format(extension, exc))
