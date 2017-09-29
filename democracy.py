@@ -156,7 +156,7 @@ class Democracy:
                 for voter in self.mot.abs:
                     msg += "<@" + voter + ">, "
 
-                file.write(msg + "\n")
+                file.write(msg + "\n\n")
 
 
         # Clear the motion.
