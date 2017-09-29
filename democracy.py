@@ -159,7 +159,7 @@ class Democracy:
         await self.votingHandler(ctx, voter, "abstain")
 
 
-    async def votingHandler(self, voter, ballot : str):
+    async def votingHandler(self, ctx, ballot : str):
         """Voting handler."""
         if not self.date == 0:
             voter = ctx.message.author.id # Get id of the voter
