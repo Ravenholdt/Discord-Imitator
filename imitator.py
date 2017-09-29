@@ -30,7 +30,7 @@ async def maintCheck():
         except:
             loadMaint()
 
-def loadMaint():
+async def loadMaint():
     try:
         bot.load_extension("maintenance")
     except Exception as e:
@@ -38,7 +38,7 @@ def loadMaint():
         print('Failed to load extension {}\n{}'.format(extension, exc))
 
 if __name__ == "__main__":
-    loadMaint()
+    await loadMaint()
 
     bot.loop.create_task(maintCheck())
     bot.run(config.discordtoken)
