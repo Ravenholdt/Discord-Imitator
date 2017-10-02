@@ -17,6 +17,8 @@ class Motion:
         self.proposalBy = newProp
         self.date = datetime.datetime.now()
 
+        self.status = "in Progress."
+
         # Ballot
         self.yes = []
         self.no = []
@@ -25,10 +27,13 @@ class Motion:
         # List of all Motion embeds for editing.
         self.lastMsg = []
 
+        self.id = int(self.proposalBy) % len(self.motion)
+
 
 class Democracy:
     
-    mot = 0
+    mot = []
+    maxMotion = 3
     motionFile = "var/motion"
 
     approvalNeeded = 5 # How many "yes/no" is needed to pass/fail a vote.
@@ -74,20 +79,34 @@ class Democracy:
     @motion.command(pass_context=True)
     async def new(self, ctx, *, motion : str):
         """Create a new motion."""
-        if self.mot == 0:
-            self.mot = Motion(newMotion = motion, newProp = ctx.message.author.id)
+        if len(self.mot) < self.maxMotion:
+            
+            newMotion = Motion(newMotion = motion, newProp = ctx.message.author.id)
+            
+            idPass = False
+            while not idPass:
+                for motions in self.mot:
+                    if motions.id == newMotion.id:
+                        newMotion.id += 1
+                        idPass = False
+                idPass = True
+
+            self.mot.append(newMotion)
             pickle.dump( self.mot, open(self.motionFile, "wb") )
             
-        # Inform users that new motion started.
-        await self.motionHandler()
+            # Inform users that new motion started.
+            await self.motionHandler()
+        
+        else:
+            await self.bot.say("Too many motions in progress.")
         
 
-    async def motionHandler(self, edit = False):
+    async def motionHandler(self, edit = False, motion = 0):
         """Motion handler."""
-        if self.mot == 0:
-            await self.bot.say("No motion in progress.")
+        if len(self.mot) == 0:
+            await self.bot.say("No motions in progress.")
         else:
-            await self.motionEmbed(edit = edit)
+            await self.motionEmbed(edit = edit, motion = motion)
 
             if edit:
                 pickle.dump( self.mot, open(self.motionFile, "wb") )
@@ -96,41 +115,53 @@ class Democracy:
 #            self.approvalNeeded = (users / 2) #+ 1 # DEBUG
 
             # Checks for approval.
-            if len(self.mot.yes) >= self.approvalNeeded:
-                # Vote passes
-                await self.motionEmbed(edit = True, status = "Passed.") # Edit all previous Embeds
-                await self.motionEmbed(edit = False, status = "Passed.") # Create an ending embed.
-                await self.resetMotion(passed = True) # Reset the voting.
+            for motions in self.mot:
+                if len(motions.yes) >= self.approvalNeeded:
+                    # Vote passes
+                    motions.status = "Passed."
 
-            # Checks for disapproval.
-            elif len(self.mot.no) >= self.approvalNeeded:
-                # Vote failed
-                await self.motionEmbed(edit = True, status = "Failed.") # Edit all previous Embeds
-                await self.motionEmbed(edit = False, status = "Failed.") # Create an ending embed.
-                await self.resetMotion(passed = False) # Reset the voting.
+                    await self.motionEmbed(edit = True, motion = motions) # Edit all previous Embeds
+                    await self.motionEmbed(edit = False, motion = motions) # Create an ending embed.
+                    await self.resetMotion(motion = motions, passed = True) # Reset the voting.
+
+                # Checks for disapproval.
+                elif len(motions.no) >= self.approvalNeeded:
+                    # Vote failed
+                    motions.status = "Failed."
+
+                    await self.motionEmbed(edit = True, motion = motions) # Edit all previous Embeds
+                    await self.motionEmbed(edit = False, motion = motions) # Create an ending embed.
+                    await self.resetMotion(motion = motions, passed = False) # Reset the voting.
 
 
-    async def motionEmbed(self, edit = False, status = "in progress."):
+    async def motionEmbed(self, edit = False, motion = 0):
         """Motion display."""
 
-        # Create the embed
-        embTitle = "Motion " + status
-        embed=discord.Embed(title=embTitle)
-        embed.add_field(name="------------------", value=self.mot.motion, inline=False)
+        motions = [motion]
 
-        value = "\U00002705 " + str(len(self.mot.yes)) + "  |  \U0000274E " + str(len(self.mot.no)) + "  |  \U00002611 " + str(len(self.mot.abs))
-        embed.add_field(name="Votes", value=value, inline=True)
-        embed.set_footer(text= "Proposal by: <@" + self.mot.proposalBy + ">  " + str(self.mot.date))
+        if motion == 0:
+            motions = self.mot
 
-        if edit: # Update already existing embed
-            for motionMsg in self.mot.lastMsg:
-                    await self.bot.edit_message(motionMsg, embed=embed)
-        else: # Create a new embed
-            motMsg = await self.bot.say(embed=embed)
-            self.mot.lastMsg.append(motMsg)
+        for motion in motions:
+            
+            # Create the embed
+            embTitle = "Motion #" + str(motion.id) + " " + motion.status
+            embed=discord.Embed(title=embTitle)
+            embed.add_field(name="------------------", value=motion.motion, inline=False)
+
+            value = "\U00002705 " + str(len(motion.yes)) + "  |  \U0000274E " + str(len(motion.no)) + "  |  \U00002611 " + str(len(motion.abs))
+            embed.add_field(name="Votes", value=value, inline=True)
+            embed.set_footer(text= "Proposal by: <@" + motion.proposalBy + ">  " + str(motion.date))
+
+            if edit: # Update already existing embed
+                for motionMsg in motion.lastMsg:
+                        await self.bot.edit_message(motionMsg, embed=embed)
+            else: # Create a new embed
+                motMsg = await self.bot.say(embed=embed)
+                motion.lastMsg.append(motMsg)
                 
 
-    async def resetMotion(self, passed = False):
+    async def resetMotion(self, motion, passed = False):
         """Resets the voting."""
 
         # If the motion passed
@@ -146,26 +177,26 @@ class Democracy:
 
             # Save the new law.
             with open("var/motions.txt", "a") as file:
-                msg = "**$" + str(lawNR) + ":** " + self.mot.motion + "\n**Proposal by:** <@" + self.mot.proposalBy + ">\n - Votes: "
+                msg = "**$" + str(lawNR) + ":** " + motion.motion + "\n**Proposal by:** <@" + motion.proposalBy + ">\n - Votes: "
 
                 msg += "For: "
-                for voter in self.mot.yes:
+                for voter in motion.yes:
                     msg += "<@" + voter + ">, "
 
                 msg += " Against: "
-                for voter in self.mot.no:
+                for voter in motion.no:
                     msg += "<@" + voter + ">, "
 
                 msg += " Abstain: "
-                for voter in self.mot.abs:
+                for voter in motion.abs:
                     msg += "<@" + voter + ">, "
 
                 file.write(msg + "\n\n")
 
 
         # Clear the motion.
-        self.mot = 0
-        os.remove(self.motionFile)
+        self.mot.remove(motion)
+        pickle.dump( self.mot, open(self.motionFile, "wb") )
 
 
 
@@ -174,46 +205,48 @@ class Democracy:
         """Vote!"""
 
     @vote.command(pass_context=True)
-    async def yay(self, ctx):
+    async def yay(self, ctx, motionID : int):
         """Vote yes!"""
-        await self.votingHandler(ctx, "yay")
+        await self.votingHandler(ctx, "yay", motionID)
 
     @vote.command(pass_context=True)
-    async def nay(self, ctx):
+    async def nay(self, ctx, motionID : int):
         """Vote no!"""
-        await self.votingHandler(ctx, "nay")
+        await self.votingHandler(ctx, "nay", motionID)
 
     @vote.command(pass_context=True)
-    async def abstain(self, ctx):
+    async def abstain(self, ctx, motionID : int):
         """Beggars can't be choosers."""
-        await self.votingHandler(ctx, "abstain")
+        await self.votingHandler(ctx, "abstain", motionID)
 
 
-    async def votingHandler(self, ctx, ballot : str):
+    async def votingHandler(self, ctx, ballot : str, motionID):
         """Voting handler."""
-        if not self.mot == 0:
+        if len(self.mot) > 0:
             voter = ctx.message.author.id # Get id of the voter
 
-            if voter in self.mot.yes:
-                self.mot.yes.remove(voter)
-            elif voter in self.mot.no:
-                self.mot.no.remove(voter)
-            elif voter in self.mot.abs:
-                self.mot.abs.remove(voter)
-            
-            if ballot == "yay":
-                self.mot.yes.append(voter)
-                await self.bot.add_reaction(ctx.message, "\U00002705") # Yes
+            for motions in self.mot:
+                if motions.id == motionID:
+                    if voter in motions.yes:
+                        motions.yes.remove(voter)
+                    elif voter in motions.no:
+                        motions.no.remove(voter)
+                    elif voter in motions.abs:
+                        motions.abs.remove(voter)
+                    
+                    if ballot == "yay":
+                        motions.yes.append(voter)
+                        await self.bot.add_reaction(ctx.message, "\U00002705") # Yes
 
-            elif ballot == "nay":
-                self.mot.no.append(voter)
-                await self.bot.add_reaction(ctx.message, "\U0000274E") # No
+                    elif ballot == "nay":
+                        motions.no.append(voter)
+                        await self.bot.add_reaction(ctx.message, "\U0000274E") # No
 
-            elif ballot == "abstain":
-                self.mot.abs.append(voter)
-                await self.bot.add_reaction(ctx.message, "\U00002611") # Abstain
+                    elif ballot == "abstain":
+                        motions.abs.append(voter)
+                        await self.bot.add_reaction(ctx.message, "\U00002611") # Abstain
 
-        await self.motionHandler(edit = True)
+                    await self.motionHandler(edit = True, motion = motions)
 
 
     @commands.command()
