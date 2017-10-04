@@ -72,6 +72,17 @@ class Silly:
                     pass
                 await asyncio.sleep(4)
 
+
+    sayWhat = True
+    @commands.command(pass_context=True)
+    async def what(self, ctx):
+        """Say what agin!"""
+        if  self.sayWhat:
+            await self.bot.say("Say what again!")
+        else:
+            author = ctx.message.author.id
+            await self.bot.say("Do I look like a bitch?\n" + "Imitator shoots " + "<@" + author + ">" + " in the leg!" + "\n" + "https://i.imgur.com/QOUFYjE.gif")
+        self.sayWhat = not self.sayWhat
     
 
 def setup(bot):
